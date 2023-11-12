@@ -158,29 +158,59 @@ public class EmployeeManagementSystemGUI {
         JTextField emailVal = new JTextField();
         emailVal.setFont(new Font("Times New Roman", Font.PLAIN, 20));
 
-        JLabel dateLabel = new JLabel("Select Reservation Date");
-        dateLabel.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+        JLabel startDateLabel = new JLabel("Select Start Date");
+        startDateLabel.setFont(new Font("Times New Roman", Font.PLAIN, 20));
 
-        JDateChooser dateChooser = new JDateChooser();
-        dateChooser.addPropertyChangeListener(new PropertyChangeListener() {
+        JDateChooser startDateChooser = new JDateChooser();
+        startDateChooser.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent e) {
                 if ("date".equals(e.getPropertyName())) {
-                    Date selectedDate = dateChooser.getDate();
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                    String selectedDateString = sdf.format(selectedDate);
-                    selectedDateLabel.setText("Selected Date: " + selectedDateString);
+                    updateSelectedDateLabel(startDateChooser, selectedStartDateLabel);
                 }
+            }
+
+            private void updateSelectedDateLabel(JDateChooser dateChooser, JLabel label) {
+                Date selectedDate = dateChooser.getDate();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                String selectedDateString = sdf.format(selectedDate);
+                label.setText("Selected Start Date: " + selectedDateString);
             }
         });
 
-        selectedDateLabel = new JLabel("Selected Date: ");
-        selectedDateLabel.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+        selectedStartDateLabel = new JLabel("Selected Start Date: ");
+        selectedStartDateLabel.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+
+        JLabel endDateLabel = new JLabel("Select End Date");
+        endDateLabel.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+
+        JDateChooser endDateChooser = new JDateChooser();
+        endDateChooser.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent e) {
+                if ("date".equals(e.getPropertyName())) {
+                    updateSelectedDateLabel(endDateChooser, selectedEndDateLabel);
+                }
+            }
+
+            private void updateSelectedDateLabel(JDateChooser dateChooser, JLabel label) {
+                Date selectedDate = dateChooser.getDate();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                String selectedDateString = sdf.format(selectedDate);
+                label.setText("Selected End Date: " + selectedDateString);
+            }
+        });
+
+        selectedEndDateLabel = new JLabel("Selected End Date: ");
+        selectedEndDateLabel.setFont(new Font("Times New Roman", Font.PLAIN, 20));
 
         JPanel calendarPanel = new JPanel();
-        calendarPanel.add(dateLabel);
-        calendarPanel.add(dateChooser);
-        calendarPanel.add(selectedDateLabel);
+        calendarPanel.add(startDateLabel);
+        calendarPanel.add(startDateChooser);
+        calendarPanel.add(selectedStartDateLabel);
+        calendarPanel.add(endDateLabel);
+        calendarPanel.add(endDateChooser);
+        calendarPanel.add(selectedEndDateLabel);
 
         JButton backButton = new JButton("Back");
         backButton.setFont(new Font("Times New Roman", Font.PLAIN, 20));
@@ -216,7 +246,6 @@ public class EmployeeManagementSystemGUI {
         panel.add(phoneVal);
         panel.add(emailLabel);
         panel.add(emailVal);
-        panel.add(dateLabel);
         panel.add(calendarPanel);
         panel.add(backButton);
         panel.add(submitButton);

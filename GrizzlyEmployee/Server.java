@@ -322,23 +322,19 @@ public class Server {
 
     }
 
-    public boolean scheduleEquipment(int employeeID, String equipmentName, String equipmentType, String phone,
-            String email, Date reservationDate) {
+    public boolean scheduleEquipment(int employeeID, Date startDate, Date endDate) {
         try {
-            String sql = "INSERT INTO equipment_schedule (employeeID, equipmentName, equipmentType, phone, email, reservationDate) "
-                    +
-                    "VALUES (?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO equipment_schedule (employeeID, startDate, endDate) VALUES (?, ?, ?)";
 
             PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             statement.setInt(1, employeeID);
-            statement.setString(2, equipmentName);
-            statement.setString(3, equipmentType);
-            statement.setString(4, phone);
-            statement.setString(5, email);
 
-            // Assuming reservationDate is a java.util.Date
-            java.sql.Date sqlReservationDate = new java.sql.Date(reservationDate.getTime());
-            statement.setDate(6, sqlReservationDate);
+            // Assuming startDate and endDate are java.util.Date
+            java.sql.Date sqlStartDate = new java.sql.Date(startDate.getTime());
+            java.sql.Date sqlEndDate = new java.sql.Date(endDate.getTime());
+
+            statement.setDate(2, sqlStartDate);
+            statement.setDate(3, sqlEndDate);
 
             int inserted = statement.executeUpdate();
 
@@ -348,7 +344,6 @@ public class Server {
                     int scheduleID = generatedKeys.getInt(1);
                     System.out.println("Equipment scheduled successfully! Schedule ID: " + scheduleID);
                     JOptionPane.showMessageDialog(null, "Equipment scheduled successfully! Schedule ID: " + scheduleID);
-
                     return true;
                 } else {
                     System.err.println("Failed to retrieve the generated schedule ID.");
@@ -356,7 +351,6 @@ public class Server {
             } else {
                 System.err.println("Equipment scheduling failed.");
             }
-
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("SQL Error Message: " + e.getMessage());
