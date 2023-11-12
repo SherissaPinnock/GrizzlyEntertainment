@@ -27,8 +27,9 @@ import java.beans.PropertyChangeListener;
 public class EmployeeManagementSystemGUI {
 
     private JFrame menuFrame;
-    private MiniCalendarDemo miniCalendar;
     JLabel selectedDateLabel;
+    private JLabel selectedStartDateLabel;
+    private JLabel selectedEndDateLabel;
 
     private Set<String> scheduledDates = new HashSet<>();
 
@@ -111,7 +112,7 @@ public class EmployeeManagementSystemGUI {
         JFrame frame = new JFrame("Schedule Equipment");
         JPanel panel = new JPanel(new GridLayout(12, 3));
 
-        JLabel idLabel = new JLabel("Enter ID");
+        JLabel idLabel = new JLabel("Enter Customer ID");
         idLabel.setFont(new Font("Times New Roman", Font.PLAIN, 20));
 
         JTextField idVal = new JTextField();
@@ -128,14 +129,27 @@ public class EmployeeManagementSystemGUI {
             }
         });
 
-        JLabel nameLabel = new JLabel("Select Equipment Name");
-        nameLabel.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+        JLabel equipmentIdLabel = new JLabel("Enter Equipment ID");
+        equipmentIdLabel.setFont(new Font("Times New Roman", Font.PLAIN, 20));
 
-        String[] equipmentNames = { "staging", "lighting", "power", "sound" };
-        JComboBox<String> nameComboBox = new JComboBox<>(equipmentNames);
-        nameComboBox.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+        JTextField equipmentIdVal = new JTextField();
+        equipmentIdVal.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+        equipmentIdVal.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!Character.isDigit(c)) {
+                    e.consume();
+                    JOptionPane.showMessageDialog(frame, "Invalid character. Please enter only numeric values.",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
 
-        JLabel phoneLabel = new JLabel("Enter Phone Number");
+        panel.add(equipmentIdLabel);
+        panel.add(equipmentIdVal);
+
+        JLabel phoneLabel = new JLabel("Enter Employee ID");
         phoneLabel.setFont(new Font("Times New Roman", Font.PLAIN, 20));
 
         JTextField phoneVal = new JTextField();
@@ -151,9 +165,6 @@ public class EmployeeManagementSystemGUI {
                 }
             }
         });
-
-        JLabel emailLabel = new JLabel("Enter Email Address");
-        emailLabel.setFont(new Font("Times New Roman", Font.PLAIN, 20));
 
         JTextField emailVal = new JTextField();
         emailVal.setFont(new Font("Times New Roman", Font.PLAIN, 20));
@@ -204,6 +215,9 @@ public class EmployeeManagementSystemGUI {
         selectedEndDateLabel = new JLabel("Selected End Date: ");
         selectedEndDateLabel.setFont(new Font("Times New Roman", Font.PLAIN, 20));
 
+        JLabel emailLabel = new JLabel("Enter Event Name");
+        emailLabel.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+
         JPanel calendarPanel = new JPanel();
         calendarPanel.add(startDateLabel);
         calendarPanel.add(startDateChooser);
@@ -222,26 +236,28 @@ public class EmployeeManagementSystemGUI {
         JButton submitButton = new JButton("Submit");
         submitButton.setFont(new Font("Times New Roman", Font.PLAIN, 20));
         submitButton.addActionListener(actionListener -> {
-            String idStr = idVal.getText();
-            String name = nameComboBox.getSelectedItem().toString();
-            String phoneNum = phoneVal.getText();
-            String email = emailVal.getText();
-            String selectedDateString = selectedDateLabel.getText().replace("Selected Date: ", "");
+            String customerId = idVal.getText();
+            String equipmentId = equipmentIdVal.getText();
+            String employeeId = phoneVal.getText();
+            String eventName = emailVal.getText();
+            String selectedStartDate = selectedStartDateLabel.getText().replace("Selected Start Date: ", "");
 
-            if (!scheduledDates.contains(selectedDateString)) {
-                scheduledDates.add(selectedDateString);
-                String successMessage = "Equipment scheduled successfully for date: " + selectedDateString;
-                JOptionPane.showMessageDialog(frame, successMessage, "Success", JOptionPane.INFORMATION_MESSAGE);
+            if (customerId.isEmpty() || equipmentId.isEmpty() || employeeId.isEmpty() || eventName.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Please fill in all fields.", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                String errorMessage = "Equipment already scheduled for this date";
-                JOptionPane.showMessageDialog(frame, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+                if (!scheduledDates.contains(selectedStartDate)) {
+                    scheduledDates.add(selectedStartDate);
+                    String successMessage = "Equipment scheduled successfully for date: " + selectedStartDate;
+                    JOptionPane.showMessageDialog(frame, successMessage, "Success", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    String errorMessage = "Equipment already scheduled for this date";
+                    JOptionPane.showMessageDialog(frame, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
 
         panel.add(idLabel);
         panel.add(idVal);
-        panel.add(nameLabel);
-        panel.add(nameComboBox);
         panel.add(phoneLabel);
         panel.add(phoneVal);
         panel.add(emailLabel);
