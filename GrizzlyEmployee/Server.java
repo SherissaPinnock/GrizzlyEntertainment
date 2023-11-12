@@ -322,19 +322,23 @@ public class Server {
 
     }
 
-    public boolean scheduleEquipment(int employeeID, Date startDate, Date endDate) {
+    public boolean scheduleEquipment(int customerID, int equipmentID, int employeeID, Date startDate, Date endDate,
+            String eventname) {
         try {
-            String sql = "INSERT INTO equipment_schedule (employeeID, startDate, endDate) VALUES (?, ?, ?)";
+            String sql = "INSERT INTO equipment_schedule (customerID, equipmentID, employeeID, startDate, endDate, eventname) VALUES (?, ?, ?, ?, ?, ?)";
 
             PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            statement.setInt(1, employeeID);
+            statement.setInt(1, customerID);
+            statement.setInt(2, equipmentID);
+            statement.setInt(3, employeeID);
 
             // Assuming startDate and endDate are java.util.Date
             java.sql.Date sqlStartDate = new java.sql.Date(startDate.getTime());
             java.sql.Date sqlEndDate = new java.sql.Date(endDate.getTime());
 
-            statement.setDate(2, sqlStartDate);
-            statement.setDate(3, sqlEndDate);
+            statement.setDate(4, sqlStartDate);
+            statement.setDate(5, sqlEndDate);
+            statement.setString(6, eventname);
 
             int inserted = statement.executeUpdate();
 
