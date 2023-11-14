@@ -304,6 +304,42 @@ public class Server {
         return false;
     }
 
+    	public static List<Transaction> retrieveTransactionInfo(int messageID) {
+	  	    List<Transaction> transactions = new ArrayList<>();
+
+	  	    try {
+	  	        String sql = "SELECT messageID, customerID, firstName, lastName, message FROM messages WHERE messageID = ?";
+	  	        PreparedStatement preparedStatement = conn.prepareStatement(sql);
+	  	        preparedStatement.setInt(1, messageID);
+
+	  	        ResultSet resultSet = preparedStatement.executeQuery();
+
+	  	        while (resultSet.next()) {
+	  	            int retrievedMessageID = resultSet.getInt("messageID");
+	  	            int customerID = resultSet.getInt("customerID");
+	  	            String firstName = resultSet.getString("firstName");
+	  	            String lastName = resultSet.getString("lastName");
+	  	            String message = resultSet.getString("message");
+
+	  	            System.out.println("Message ID: " + retrievedMessageID +
+	  	                    " | Customer ID: " + customerID +
+	  	                    " | First Name: " + firstName +
+	  	                    " | Last Name: " + lastName +
+	  	                    " | Message: " + message);
+
+	  	            Transaction transaction = new Transaction(retrievedMessageID, /*other parameters needed*/);
+	  	            transactions.add(transaction);
+	  	        }
+
+	  	        conn.close(); // Close the connection
+	  	    } catch (SQLException e) {
+	  	        e.printStackTrace();
+	  	        // Handle exceptions here
+	  	    }
+
+	  	    return transactions;
+	  	}
+
     public static void deleteRecord(int id) {
         try {
             String sql = "Delete from customers WHERE customerID=?";
